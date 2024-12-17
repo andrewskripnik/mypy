@@ -22,7 +22,7 @@ jobs:
             echo "{\"changed_dirs\": $CHANGED_DIRS}" > /tmp/continue_params.json
       - continuation/continue:
           configuration_path: .circleci/continue_config.yml
-          parameters: /tmp/continue_params.json
+          #parameters: /tmp/continue_params.json
 
 workflows:
   setup-workflow:
