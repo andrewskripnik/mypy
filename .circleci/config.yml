@@ -25,7 +25,7 @@ jobs:
             fi
       - continuation/continue:
           configuration_path: .circleci/continue_config.yml
-          parameters: '{"changed_dirs": $CHANGED_DIRS}'
+          parameters: $(echo "{\"changed_dirs\": $CHANGED_DIRS}")
 
 workflows:
   setup-workflow:

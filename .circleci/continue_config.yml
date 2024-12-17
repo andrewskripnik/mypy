@@ -5,8 +5,8 @@ orbs:
 
 parameters:
   changed_dirs:
-    type: string
-    default: "[]"
+    type: string[]
+    default: []
 
 jobs:
   pylint_check:
