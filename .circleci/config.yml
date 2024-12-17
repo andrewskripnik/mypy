@@ -1,0 +1,33 @@
+version: 2.1
+
+setup: true
+
+orbs:
+  continuation: circleci/continuation@1.0.0
+
+jobs:
+  setup:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Detect changed directories
+          command: |
+            changed_dirs=$(git diff --dirstat=files,0 HEAD~1 | sed 's/^[ 0-9.]\+% //g' | cut -d'/' -f1 | sort -u | jq -R -s -c 'split("\n")[:-1]')
+            echo "export CHANGED_DIRS='$changed_dirs'" >> $BASH_ENV
+      # - run:
+      #     name: Check for changes
+      #     command: |
+      #       if [ "$CHANGED_DIRS" == "[]" ]; then
+      #         echo "No changes detected. Skipping further steps."
+      #         circleci-agent step halt
+      #       fi
+      - continuation/continue:
+          configuration_path: .circleci/continue_config.yml
+          parameters: '{"changed_dirs": << pipeline.parameters.changed_dirs >>}'
+
+workflows:
+  setup-workflow:
+    jobs:
+      - setup
