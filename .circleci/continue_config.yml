@@ -6,7 +6,7 @@ orbs:
 parameters:
   changed_dirs:
     type: string[]
-    default: []
+    default: ["folder1", "folder2"]
 
 jobs:
   pylint_check:
@@ -32,4 +32,4 @@ workflows:
           matrix:
             parameters:
               #folder: << pipeline.parameters.changed_dirs >>
-              folder: ["folder1", "folder2"]
+              folder: << pipeline.parameters.changed_dirs >>
