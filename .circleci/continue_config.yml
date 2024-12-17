@@ -32,4 +32,4 @@ workflows:
           matrix:
             parameters:
               #folder: << pipeline.parameters.changed_dirs >>
-              folder: {"changed_dirs": ["folder1", "folder2"]}
+              folder: ["folder1", "folder2"]
