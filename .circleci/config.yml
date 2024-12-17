@@ -17,15 +17,12 @@ jobs:
             changed_dirs=$(git diff --dirstat=files,0 HEAD~1 | sed 's/^[ 0-9.]\+% //g' | cut -d'/' -f1 | sort -u | jq -R -s -c 'split("\n")[:-1]')
             echo "export CHANGED_DIRS='$changed_dirs'" >> $BASH_ENV
       - run:
-          name: Check for changes
+          name: Prepare continuation parameters
           command: |
-            if [ "$CHANGED_DIRS" == "[]" ]; then
-              echo "No changes detected. Skipping further steps."
-              circleci-agent step halt
-            fi
+            echo "{\"changed_dirs\": $CHANGED_DIRS}" > /tmp/continue_params.json
       - continuation/continue:
           configuration_path: .circleci/continue_config.yml
-          parameters: $(echo "{\"changed_dirs\": $CHANGED_DIRS}")
+          parameters: /tmp/continue_params.json
 
 workflows:
   setup-workflow:
