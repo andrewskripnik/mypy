@@ -31,4 +31,5 @@ workflows:
       - pylint_check:
           matrix:
             parameters:
-              folder: << pipeline.parameters.changed_dirs >>
+              #folder: << pipeline.parameters.changed_dirs >>
+              folder: ["folder1", "folder2"]
