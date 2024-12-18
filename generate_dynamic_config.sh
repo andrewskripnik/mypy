@@ -13,6 +13,9 @@ fi
 cp .circleci/config_template.yml .circleci/generated_config.yml
 
 # Append jobs to the config file
+echo ""
+echo "Append jobs to the config file"
+echo ""
 for dir in $changed_folders; do
   echo $dir
   export FOLDER=$dir
@@ -22,6 +25,7 @@ for dir in $changed_folders; do
           folder: $FOLDER
 EOL
 done
+echo "End appending"
 
 # Clean up temporary file
 rm .circleci/config_template.yml
