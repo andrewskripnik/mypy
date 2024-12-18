@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Detect changes in the repository and output the list of changed folders
+echo "git diff debug:"
 git diff --name-only HEAD~1 HEAD
+git diff --name-only HEAD~1 HEAD | grep '/'
+git diff --name-only HEAD~1 HEAD | grep '/' | cut -d '/' -f1
+echo "git diff debug end"
 changed_folders=$(git diff --name-only HEAD~1 HEAD | grep '/' | cut -d '/' -f1 | sort | uniq)
 
 # Start generating the CircleCI config file
@@ -47,7 +51,9 @@ cp .circleci/config_template.yml .circleci/generated_config.yml
 # Append jobs to the config file
 echo "Changed dirs: "
 echo $changed_dirs
+
 for dir in $changed_dirs; do
+  echo $dir
   export FOLDER=$dir
   envsubst < .circleci/config_template.yml >> .circleci/generated_config.yml
   cat <<EOL >> .circleci/generated_config.yml
