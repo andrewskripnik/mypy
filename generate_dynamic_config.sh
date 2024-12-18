@@ -7,18 +7,7 @@ if [ -z "$changed_dirs" ]; then
 fi
 
 # Detect changes in the repository and output the list of changed folders
-echo "git diff debug:"
-git diff --name-only HEAD~1 HEAD
-echo ""
-git diff --name-only HEAD~1 HEAD | grep '/'
-echo ""
-git diff --name-only HEAD~1 HEAD | grep '/' | cut -d '/' -f1
-echo "git diff debug end"
-echo ""
 changed_folders=$(git diff --name-only HEAD~1 HEAD | grep '/' | cut -d '/' -f1 | sort | uniq)
-echo "changed_folders"
-echo $changed_folders
-echo ""
 
 # Start generating the CircleCI config file
 cat <<EOL > .circleci/config_template.yml

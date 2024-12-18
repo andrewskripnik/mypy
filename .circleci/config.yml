@@ -27,11 +27,16 @@ jobs:
 
             # Handle errors from git diff
             changed_dirs=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+            
+            echo "[Check for changed folders with .py files] Git diff"
+            git diff --name-only HEAD~1 HEAD 2>/dev/null || echo ""
+            echo "[Check for changed folders with .py files] Changed dirs: ${changed_dirs}"
+
             if [ -z "$changed_dirs" ]; then
               echo "Error: git diff command failed or no changes found."
               circleci-agent step halt
             fi
-            
+
             changed_dirs=$(echo "$changed_dirs" | grep '/' | xargs -n1 dirname | sort | uniq)
             py_dirs=""
             for dir in $changed_dirs; do
