@@ -13,7 +13,10 @@ jobs:
       - run: 
           name: Install python requirements
           command: |
+            ls
+            echo $FOLDER
             cd ${FOLDER}
+            pwd
             pip install -r requirements.txt
       - run:
           name: Run operations for ${FOLDER}
