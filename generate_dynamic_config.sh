@@ -1,13 +1,13 @@
 #!/bin/bash
 
+# List of changed directories containing .py files (passed as a parameter)
+changed_folders=$1
+
 # If no directories are provided, exit gracefully
-if [ -z "$changed_dirs" ]; then
-  echo "[generate_dynamic_config.sh] No directories with .py files provided. Stopping build."
+if [ -z "$changed_folders" ]; then
+  echo "No directories with .py files provided. Stopping build."
   circleci-agent step halt
 fi
-
-# Detect changes in the repository and output the list of changed folders
-changed_folders=$(git diff --name-only HEAD~1 HEAD | grep '/' | cut -d '/' -f1 | sort | uniq)
 
 # Initialize the config file
 cp .circleci/config_template.yml .circleci/generated_config.yml
@@ -16,6 +16,7 @@ cp .circleci/config_template.yml .circleci/generated_config.yml
 echo "Changed dirs: "
 echo $changed_folders
 
+echo "for loop: "
 for dir in $changed_folders; do
   echo $dir
   export FOLDER=$dir
