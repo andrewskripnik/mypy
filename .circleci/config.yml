@@ -58,7 +58,6 @@ jobs:
           parameters: '{}'
 
 workflows:
-  version: 2
   setup-workflow:
     jobs:
       - setup
