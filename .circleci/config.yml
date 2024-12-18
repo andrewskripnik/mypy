@@ -22,10 +22,29 @@ jobs:
       - run:
           name: Check for changed folders with .py files
           command: |
-            changed_folders=$(git diff --name-only HEAD~1 HEAD | grep -E '.*\.py$' | xargs -n1 dirname | sort | uniq)
-            if [ -z "$changed_folders" ]; then
-               echo "No folders with .py files changed. Stopping build."
-               circleci-agent step halt
+            set -e
+
+            # Handle errors from git diff
+            changed_dirs=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+            if [ -z "$changed_dirs" ]; then
+              echo "Error: git diff command failed or no changes found."
+              circleci-agent step halt
+            fi
+            
+            changed_dirs=$(echo "$changed_dirs" | grep '/' | xargs -n1 dirname | sort | uniq)
+            py_dirs=""
+            for dir in $changed_dirs; do
+              if ls $dir/*.py 1> /dev/null 2>&1; then
+                py_dirs="$py_dirs $dir"
+              fi
+            done
+            if [ -z "$py_dirs" ]; then
+              echo "No directories with .py files changed. Stopping build."
+              circleci-agent step halt
+            else
+              echo "Found directories with .py files: $py_dirs"
+              # Exporting the directories for the next job
+              echo "export PY_DIRS=\"$py_dirs\"" >> $BASH_ENV
             fi
       - run:
           name: Generate dynamic config
