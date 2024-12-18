@@ -2,7 +2,7 @@
 
 # If no directories are provided, exit gracefully
 if [ -z "$changed_dirs" ]; then
-  echo "No directories with .py files provided. Stopping build."
+  echo "[generate_dynamic_config.sh] No directories with .py files provided. Stopping build."
   circleci-agent step halt
 fi
 
