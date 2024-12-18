@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# If no directories are provided, exit gracefully
+if [ -z "$changed_dirs" ]; then
+  echo "No directories with .py files provided. Stopping build."
+  circleci-agent step halt
+fi
+
 # Detect changes in the repository and output the list of changed folders
 echo "git diff debug:"
 git diff --name-only HEAD~1 HEAD
