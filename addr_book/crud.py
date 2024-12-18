@@ -1,7 +1,7 @@
 import re
 import configparser
 
-######## Functions
+######## Functions ########
 
 def search(param):
   db_w = getConf()
