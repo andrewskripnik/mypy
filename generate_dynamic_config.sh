@@ -19,13 +19,10 @@ echo ""
 for dir in $changed_folders; do
   echo $dir
   export FOLDER=$dir
-  envsubst < .circleci/config_template.yml >> .circleci/generated_config.yml
+  #envsubst < .circleci/config_template.yml >> .circleci/generated_config.yml
   cat <<EOL >> .circleci/generated_config.yml
       - run_operations:
-          folder: $FOLDER
+          folder: $dir
 EOL
 done
 echo "End appending"
-
-# Clean up temporary file
-rm .circleci/config_template.yml
