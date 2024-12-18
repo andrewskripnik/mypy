@@ -45,6 +45,7 @@ EOL
 cp .circleci/config_template.yml .circleci/generated_config.yml
 
 # Append jobs to the config file
+echo "Changed dirs: "
 echo $changed_dirs
 for dir in $changed_dirs; do
   export FOLDER=$dir
