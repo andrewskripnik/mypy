@@ -1,7 +1,7 @@
 import os, pickle
 from sys import argv
 
-ad_file = r'D:\python\mypy\addr_book.db'
+ad_file = r'addr_book.db'
 serialize = __import__('pickle')
 
 def updateDB(i1):
@@ -23,9 +23,9 @@ def main():
     if argv[1] == 'up':
         add_book = {'Bob M': '0634456788', 'Bill V': '380635433344', 'Willy S': '380632346789'}
         updateDB(add_book)
-        print getDB()
+        print(getDB())
     else:
-        print "Main"
+        print("Main")
 
 
 
