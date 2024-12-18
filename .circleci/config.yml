@@ -20,6 +20,10 @@ jobs:
           name: Prepare continuation parameters
           command: |
             echo "{\"changed_dirs\": $CHANGED_DIRS}" > /tmp/continue_params.json
+      - run:
+          name: Cat continue_params.json
+          command: |
+            cat /tmp/continue_params.json
       - continuation/continue:
           configuration_path: .circleci/continue_config.yml
           #parameters: /tmp/continue_params.json
