@@ -13,10 +13,6 @@ fi
 cp .circleci/config_template.yml .circleci/generated_config.yml
 
 # Append jobs to the config file
-echo "Changed dirs: "
-echo $changed_folders
-
-echo "for loop: "
 for dir in $changed_folders; do
   echo $dir
   export FOLDER=$dir

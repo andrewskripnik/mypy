@@ -58,6 +58,7 @@ jobs:
             ls -la
             chmod +x generate_dynamic_config.sh
             ./generate_dynamic_config.sh "$PY_DIRS"
+            cat .circleci/generated_config.yml
       - continuation/continue:
           configuration_path: .circleci/generated_config.yml
           parameters: '{}'
