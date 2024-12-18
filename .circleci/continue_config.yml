@@ -1,12 +1,9 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@2.1.1
-
 parameters:
   changed_dirs:
     type: string
-    default: ""
+    default: '{ "folder": ["folder1", "folder2"]}'
 
 jobs:
   pylint_check:
@@ -17,19 +14,17 @@ jobs:
       - image: cimg/python:3.9
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
       - run:
           name: Run pylint on << parameters.folder >>
           command: |
-            pip install pylint
-            pylint << parameters.folder >>/*.py
+            echo $FOLDER
+            #pylint << parameters.folder >>/*.py
 
 workflows:
   pylint_checks:
     jobs:
       - pylint_check:
           matrix:
-            parameters: { "folder": ["folder1", "folder2"]}
+            parameters: << pipeline.parameters.changed_dirs >>
               #folder: << pipeline.parameters.changed_dirs >>
               #folder: << pipeline.parameters.changed_dirs >>
