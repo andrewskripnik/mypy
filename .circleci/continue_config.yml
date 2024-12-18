@@ -6,7 +6,7 @@ orbs:
 parameters:
   changed_dirs:
     type: string
-    default: ["folder1", "folder2"]
+    default: ""
 
 jobs:
   pylint_check:
