@@ -20,6 +20,14 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Check for changed folders with .py files
+          command: |
+            changed_folders=$(git diff --name-only HEAD~1 HEAD | grep -E '.*\.py$' | xargs -n1 dirname | sort | uniq)
+            if [ -z "$changed_folders" ]; then
+               echo "No folders with .py files changed. Stopping build."
+               circleci-agent step halt
+            fi
+      - run:
           name: Generate dynamic config
           command: |
             ls -la
