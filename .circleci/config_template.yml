@@ -14,16 +14,16 @@ jobs:
           name: Install python requirements
           command: |
             ls
-            echo $FOLDER
-            cd ${FOLDER}
+            echo << parameters.folder >>
+            cd << parameters.folder >>
             pwd
             pip install -r requirements.txt
       - run:
-          name: Run operations for ${FOLDER}
+          name: Run operations for << parameters.folder >>
           command: |
-            echo "Running operations for ${FOLDER}"
-            cd ${FOLDER}
+            echo "Running operations for << parameters.folder >>"
+            cd << parameters.folder >>
             pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" add_book.py
 workflows:
-  detect_and_run:
+  run:
     jobs:
