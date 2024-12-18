@@ -2,41 +2,33 @@ version: 2.1
 
 setup: true
 
-jobs:
-  detect-changes:
+orbs:
+  continuation: circleci/continuation@1.0.0
+
+executors:
+  python:
     docker:
-      - image: circleci/python:3.9
+      - image: circleci/python:3.8
+  base:
+    docker:
+      - image: cimg/base:2024.12
+
+
+jobs:
+  setup:
+    executor: base
     steps:
       - checkout
       - run:
-          name: "Find Changed Folders"
+          name: Generate dynamic config
           command: |
-            # Detect changed folders
-            changed_folders=$(git diff --name-only HEAD^ HEAD | xargs -n1 dirname | sort -u)
-            # Save as JSON array
-            echo "$changed_folders" | jq -R -s -c 'split("\n")[:-1]' > changed_folders.json
-      - persist_to_workspace:
-          root: .
-          paths:
-            - changed_folders.json
-
-  run-tests:
-    docker:
-      - image: circleci/python:3.9
-    parameters:
-      folder:
-        type: string
-    steps:
-      - run:
-          name: "Run Tests"
-          command: |
-            echo "Running tests in folder: << parameters.folder >>"
+            ./generate_dynamic_config.sh
+      - continuation/continue:
+          configuration_path: .circleci/generated_config.yml
+          parameters: '{}'
 
 workflows:
-  dynamic-matrix:
+  version: 2
+  setup-workflow:
     jobs:
-      - detect-changes
-      - run-tests:
-          matrix:
-            parameters:
-              folder: << pipeline.parameters.changed_folders >>
+      - setup
