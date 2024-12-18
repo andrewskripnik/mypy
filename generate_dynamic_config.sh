@@ -56,9 +56,9 @@ cp .circleci/config_template.yml .circleci/generated_config.yml
 
 # Append jobs to the config file
 echo "Changed dirs: "
-echo $changed_dirs
+echo $changed_folders
 
-for dir in $changed_dirs; do
+for dir in $changed_folders; do
   echo $dir
   export FOLDER=$dir
   envsubst < .circleci/config_template.yml >> .circleci/generated_config.yml
