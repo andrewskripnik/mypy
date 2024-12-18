@@ -24,16 +24,17 @@ jobs:
         type: string
     steps:
       - checkout
+      - run: 
+          name: Install python requirements
+          command: |
+            cd $FOLDER
+            pip install -r requirements.txt
       - run:
           name: Run operations for $FOLDER
           command: |
-            if [ -d "$FOLDER" ]; then
-              echo "Running operations for $FOLDER"
-              # Add your folder-specific operations here
-            else
-              echo "Folder $FOLDER does not exist."
-            fi
-
+            echo "Running operations for $FOLDER"
+            cd $FOLDER
+            pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" add_book.py
 workflows:
   detect_and_run:
     jobs:
