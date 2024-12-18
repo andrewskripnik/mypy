@@ -23,27 +23,27 @@ jobs:
       - run:
           name: Check for changed folders with .py files
           command: |
-            set -e
-
-            # Handle errors from git diff
-            changed_dirs=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
-            
-            echo "[Check for changed folders with .py files] Git diff"
-            git diff --name-only HEAD~1 HEAD 2>/dev/null || echo ""
-            echo "[Check for changed folders with .py files] Changed dirs: ${changed_dirs}"
-
-            if [ -z "$changed_dirs" ]; then
-              echo "Error: git diff command failed or no changes found."
+            # Get the list of changed files
+            changed_files=$(git diff --name-only HEAD~1 HEAD)
+            if [ $? -ne 0 ]; then
+              echo "Error: git diff command failed."
               circleci-agent step halt
             fi
 
-            changed_dirs=$(echo "$changed_dirs" | grep '/' | xargs -n1 dirname | sort | uniq)
+            if [ -z "$changed_files" ]; then
+              echo "No changes detected. Stopping build."
+              circleci-agent step halt
+            fi
+
+            # Get the list of unique directories containing .py files
+            changed_dirs=$(echo "$changed_files" | grep '/' | xargs -n1 dirname | sort | uniq)
             py_dirs=""
             for dir in $changed_dirs; do
               if ls $dir/*.py 1> /dev/null 2>&1; then
                 py_dirs="$py_dirs $dir"
               fi
             done
+
             if [ -z "$py_dirs" ]; then
               echo "No directories with .py files changed. Stopping build."
               circleci-agent step halt
