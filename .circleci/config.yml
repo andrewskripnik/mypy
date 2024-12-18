@@ -22,8 +22,7 @@ jobs:
       - run:
           name: Generate dynamic config
           command: |
-            ls 
-            ls ./*
+            ls -la
             ./generate_dynamic_config.sh
       - continuation/continue:
           configuration_path: .circleci/generated_config.yml
