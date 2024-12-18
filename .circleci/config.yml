@@ -2,33 +2,41 @@ version: 2.1
 
 setup: true
 
-orbs:
-  continuation: circleci/continuation@1.0.0
-
 jobs:
-  setup:
+  detect-changes:
     docker:
-      - image: cimg/base:stable
+      - image: circleci/python:3.9
     steps:
       - checkout
       - run:
-          name: Detect changed directories
+          name: "Find Changed Folders"
           command: |
-            changed_dirs=$(git diff --dirstat=files,0 HEAD~1 | sed 's/^[ 0-9.]\+% //g' | cut -d'/' -f1 | sort -u | jq -R -s -c 'split("\n")[:-1]')
-            echo "export CHANGED_DIRS='$changed_dirs'" >> $BASH_ENV
+            # Detect changed folders
+            changed_folders=$(git diff --name-only HEAD^ HEAD | xargs -n1 dirname | sort -u)
+            # Save as JSON array
+            echo "$changed_folders" | jq -R -s -c 'split("\n")[:-1]' > changed_folders.json
+      - persist_to_workspace:
+          root: .
+          paths:
+            - changed_folders.json
+
+  run-tests:
+    docker:
+      - image: circleci/python:3.9
+    parameters:
+      folder:
+        type: string
+    steps:
       - run:
-          name: Prepare continuation parameters
+          name: "Run Tests"
           command: |
-            echo "{\"changed_dirs\": $CHANGED_DIRS}" > /tmp/continue_params.json
-      - run:
-          name: Cat continue_params.json
-          command: |
-            cat /tmp/continue_params.json
-      - continuation/continue:
-          configuration_path: .circleci/continue_config.yml
-          #parameters: /tmp/continue_params.json
+            echo "Running tests in folder: << parameters.folder >>"
 
 workflows:
-  setup-workflow:
+  dynamic-matrix:
     jobs:
-      - setup
+      - detect-changes
+      - run-tests:
+          matrix:
+            parameters:
+              folder: << pipeline.parameters.changed_folders >>
