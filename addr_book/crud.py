@@ -1,3 +1,7 @@
+"""
+This module provides CRUD operations for managing contacts in an address book.
+"""
+
 import re
 import configparser
 
@@ -15,9 +19,8 @@ def add(aname, aphone):
   add_book = db_w.getDB()
   if aname in add_book.keys():
     raise ValueError('Contact exists')
-  else:
-    add_book[aname] = aphone
-    db_w.updateDB(add_book)
+  add_book[aname] = aphone
+  db_w.updateDB(add_book)
   db_contents = db_w.getDB()
   print("DB contents: \n", db_contents.items())
 
@@ -27,10 +30,9 @@ def remove(dname):
   add_book = db_w.getDB()
   if dname not in add_book:
     raise ValueError('No contact')
-  else:
-    value = add_book.pop(dname)
-    db_w.updateDB(add_book)
-    print(value + ' deleted')
+  value = add_book.pop(dname)
+  db_w.updateDB(add_book)
+  print(value + ' deleted')
 
 def getConf():
   config = configparser.ConfigParser()
