@@ -9,7 +9,7 @@ commands:
         default: ""
     steps:
       - run:
-          name: Install python requirements
+          name: [<< parameters.folder >>] Install python requirements
           command: |
             cd << parameters.folder >>
             if test -e requirements.txt; then
@@ -27,16 +27,16 @@ commands:
         default: "files_for_pylint.lst"
     steps:
       - run:
-          name: Install pylint
+          name: [<< parameters.folder >>] Install pylint
           command: pip install pylint
       - run:
-          name: Run pylint
+          name: [<< parameters.folder >>] Run pylint
           command: |
             cd << parameters.folder >>
             echo "Running pylint"
             if test -e << parameters.file_list >>; then
-              echo "Running pylint"
               for f in $(cat << parameters.file_list >>); do
+                echo "Running pylint for $f"
                 pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" $f || true
               done
             fi
@@ -58,7 +58,7 @@ jobs:
           folder: << parameters.folder >>
           file_list: "files_for_pylint.lst"
       - run:
-          name: Run operations for << parameters.folder >>
+          name: [<< parameters.folder >>] Run operations
           command: |
             echo "Running operations for << parameters.folder >>"
             cd << parameters.folder >>
