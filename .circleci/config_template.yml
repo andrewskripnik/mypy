@@ -33,15 +33,20 @@ commands:
           name: --> << parameters.folder >> <-- Run pylint
           command: |
             cd << parameters.folder >>
+            echo "You are in folder"
+            pwd
+            echo "Folder content"
+            ls -la
+            echo "Show file content"
+            cat -A << parameters.file_list >>
+            echo ""
             if [ -e << parameters.file_list >> ]; then
-              echo "Show file content"
-              cat << parameters.file_list >>
-              echo ""
               while IFS= read -r f; do
                 echo "File for pylint: $f"
                 if [ -e $f ]; then
                   echo "Running pylint for $f"
                   pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" "$f" || true
+                  echo "Completed pylint for $f"
                 fi
               done < << parameters.file_list >>
             fi
