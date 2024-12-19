@@ -34,6 +34,8 @@ commands:
           command: |
             cd << parameters.folder >>
             if test -e << parameters.file_list >>; then
+              echo "Show file content"
+              cat << parameters.file_list >>
               for f in $(cat << parameters.file_list >>); do
               echo "File for pylint: $f"
                 if test -e $f; then
