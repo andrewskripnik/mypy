@@ -35,7 +35,8 @@ commands:
             cd << parameters.folder >>
             if test -e << parameters.file_list >>; then
               echo "Show file content"
-              file_lst=$(cat << parameters.file_list >>)
+              cat << parameters.file_list >>
+              echo ""
               while IFS= read -r f; do
                 echo "File for pylint: $f"
                 if test -e $f; then
