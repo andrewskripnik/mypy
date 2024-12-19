@@ -41,11 +41,14 @@ commands:
             cat -A << parameters.file_list >>
             echo "Modify file content"
             sed -i 's/\r//' << parameters.file_list >>
+            echo "Check file content after modification"
+            cat -A << parameters.file_list >>
             echo ""
+
             if [ -e << parameters.file_list >> ]; then
               while IFS= read -r f; do
                 echo "File for pylint: $f"
-                if [ -e $f ]; then
+                if [ -n $f ]; then
                   echo "Running pylint for $f"
                   pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" "$f" || true
                   echo "Completed pylint for $f"
