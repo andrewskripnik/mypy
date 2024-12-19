@@ -5,7 +5,7 @@ This module provides CRUD operations for managing contacts in an address book.
 import re
 import configparser
 
-######## Functions ########
+################ Functions ################
 
 def search(param):
   db_w = getConf()
