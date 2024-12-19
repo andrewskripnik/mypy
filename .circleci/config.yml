@@ -1,0 +1,70 @@
+version: 2.1
+
+setup: true
+
+orbs:
+  continuation: circleci/continuation@1.0.0
+
+executors:
+  python:
+    docker:
+      - image: circleci/python:3.8
+  base:
+    docker:
+      - image: cimg/base:2024.12
+
+
+jobs:
+  setup:
+    executor: base
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Check for changed folders with .py files
+          command: |
+            # Get the list of changed files
+            changed_files=$(git diff --name-only HEAD~1 HEAD)
+            if [ $? -ne 0 ]; then
+              echo "Error: git diff command failed."
+              circleci-agent step halt
+            fi
+
+            if [ -z "$changed_files" ]; then
+              echo "No changes detected. Stopping build."
+              circleci-agent step halt
+            fi
+
+            # Get the list of unique directories containing .py files
+            changed_dirs=$(echo "$changed_files" | grep '/' | xargs -n1 dirname | sort | uniq)
+            py_dirs=""
+            for dir in $changed_dirs; do
+              if ls $dir/*.py 1> /dev/null 2>&1; then
+                py_dirs="$py_dirs $dir"
+              fi
+            done
+
+            if [ -z "$py_dirs" ]; then
+              echo "No directories with .py files changed. Stopping build."
+              circleci-agent step halt
+            else
+              echo "Found directories with .py files: $py_dirs"
+              # Exporting the directories for the next job
+              echo "export PY_DIRS=\"$py_dirs\"" >> $BASH_ENV
+            fi
+      - run:
+          name: Generate dynamic config
+          command: |
+            ls -la
+            chmod +x generate_dynamic_config.sh
+            ./generate_dynamic_config.sh "$PY_DIRS"
+            echo "[config.yml] cat .circleci/generated_config.yml"
+            cat .circleci/generated_config.yml
+      - continuation/continue:
+          configuration_path: .circleci/generated_config.yml
+          parameters: '{}'
+
+workflows:
+  setup-workflow:
+    jobs:
+      - setup

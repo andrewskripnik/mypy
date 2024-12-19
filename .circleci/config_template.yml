@@ -1,0 +1,84 @@
+version: 2.1
+
+commands:
+  install_python_requirements:
+    description: "Install python requirements"
+    parameters:
+      folder:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: ----> << parameters.folder >> <---- Install python requirements
+          command: |
+            cd << parameters.folder >>
+            if test -e requirements.txt; then
+              echo "Installing python requirements"
+              pip install -r requirements.txt
+            fi
+  run_pylint:
+    description: "Run pylint on a list of files"
+    parameters:
+      folder:
+        type: string
+        default: ""
+      file_list:
+        type: string
+        default: "files_for_pylint.lst"
+    steps:
+      - run:
+          name: ----> << parameters.folder >> <---- Install pylint
+          command: pip install pylint
+      - run:
+          name: ----> << parameters.folder >> <---- Run pylint
+          command: |
+            cd << parameters.folder >>
+            echo "--> You are in folder"
+            pwd
+            echo "--> Folder content"
+            ls -la
+            echo "--> Show file content"
+            cat -A << parameters.file_list >>
+            echo "--> Dos2unix file content"
+            sed -i 's/\r//' << parameters.file_list >>
+            echo "" >> << parameters.file_list >>
+            echo "--> Check file content after modification"
+            cat -A << parameters.file_list >>
+
+            if [ -n "<< parameters.file_list >>" ] && [ -e << parameters.file_list >> ]; then
+              while IFS= read -r f; do
+                echo "--> File for pylint: $f"
+                if [ -n "$f" ] && [ -e << parameters.file_list >> ]; then
+                  echo "--> Running pylint for $f"
+                  pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" "$f" || true
+                  echo "--> Completed pylint for $f"
+                fi
+              done < << parameters.file_list >>
+            fi
+            true
+
+jobs:
+  run_operations:
+    docker:
+      - image: cimg/python:3.13
+    resource_class: small
+    parameters:
+      folder:
+        type: string
+    steps:
+      - checkout
+      - install_python_requirements:
+          folder: << parameters.folder >>
+      - run_pylint:
+          folder: << parameters.folder >>
+          file_list: "files_for_pylint.lst"
+      - run:
+          name: ----> << parameters.folder >> <---- Run operations
+          command: |
+            echo "Running operations for << parameters.folder >>"
+            cd << parameters.folder >>
+            ls
+
+workflows:
+  setup_and_run_operations:
+    jobs:

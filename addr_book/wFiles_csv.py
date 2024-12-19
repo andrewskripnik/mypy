@@ -2,7 +2,7 @@ import os
 import csv
 from sys import argv
 
-ad_file = r'D:\python\mypy\addr_book.csv'
+ad_file = r'addr_book.csv'
 serialize = __import__('csv')
 
 def updateDB(i1):
@@ -18,7 +18,6 @@ def getDB():
     add_book = dict(reader)
   return add_book
 
-
 def searchDB(i1):
     pass
 
@@ -26,14 +25,13 @@ def main():
     if argv[1] == 'up':
         add_book = {'Bob C': '0634456788', 'Bill C': '380635433344', 'Willy C': '380632346789'}
         updateDB(add_book)
-        print getDB()
+        print(getDB())
     else:
-        print "Main"
-
+        print("Main")
 
 
 if __name__ == "__main__":
     try:
       main()
     except IndexError:
-        print "no args"
+        print("no args")
