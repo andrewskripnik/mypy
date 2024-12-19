@@ -1,3 +1,7 @@
+"""
+A simple Flask application that greets the user by name.
+"""
+
 from flask import Flask
 app = Flask(__name__)
 

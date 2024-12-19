@@ -1,3 +1,7 @@
+"""
+A simple Flask application that returns a greeting.
+"""
+
 from flask import Flask
 
 app = Flask(__name__)
