@@ -36,8 +36,10 @@ commands:
             echo "Running pylint"
             if test -e << parameters.file_list >>; then
               for f in $(cat << parameters.file_list >>); do
-                echo "Running pylint for $f"
-                pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" $f || true
+                if test -e $f; then
+                  echo "Running pylint for $f"
+                  pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" $f || true
+                fi
               done
             fi
 
