@@ -9,7 +9,7 @@ commands:
         default: ""
     steps:
       - run:
-          name: [<< parameters.folder >>] Install python requirements
+          name: --> << parameters.folder >> <-- Install python requirements
           command: |
             cd << parameters.folder >>
             if test -e requirements.txt; then
@@ -27,10 +27,10 @@ commands:
         default: "files_for_pylint.lst"
     steps:
       - run:
-          name: [<< parameters.folder >>] Install pylint
+          name: --> << parameters.folder >> <-- Install pylint
           command: pip install pylint
       - run:
-          name: [<< parameters.folder >>] Run pylint
+          name: --> << parameters.folder >> <-- Run pylint
           command: |
             cd << parameters.folder >>
             echo "Running pylint"
@@ -42,7 +42,6 @@ commands:
                 fi
               done
             fi
-
 
 jobs:
   run_operations:
@@ -60,7 +59,7 @@ jobs:
           folder: << parameters.folder >>
           file_list: "files_for_pylint.lst"
       - run:
-          name: [<< parameters.folder >>] Run operations
+          name: --> << parameters.folder >> <-- Run operations
           command: |
             echo "Running operations for << parameters.folder >>"
             cd << parameters.folder >>
