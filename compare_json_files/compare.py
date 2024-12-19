@@ -2,6 +2,11 @@
 Module for comparing two JSON files and printing the differences.
 """
 
+"""
+TODO: Consider to check json syntax before comparing.
+TODO: Consider to add line number to the output.
+"""
+
 import json
 import sys
 from deepdiff import DeepDiff
