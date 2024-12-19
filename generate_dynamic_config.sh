@@ -23,6 +23,7 @@ for dir in $changed_folders; do
   cat <<EOL >> .circleci/generated_config.yml
       - run_operations:
           folder: $dir
+          name: run_operations for $dir 
 EOL
 done
 echo "End appending"

@@ -25,5 +25,5 @@ jobs:
             cd << parameters.folder >>
             pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" add_book.py || true
 workflows:
-  run:
+  setup_and_run_operations:
     jobs:
