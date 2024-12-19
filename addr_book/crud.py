@@ -8,14 +8,14 @@ import configparser
 ############### Functions ###############
 
 def search(param):
-  db_w = getConf()
+  db_w = get_conf()
   add_book = db_w.getDB()
   for key, val in add_book.items():
     if re.search(param.lower(), key.lower()) or re.search(param, val):
       print(key, val)
 
 def add(aname, aphone):
-  db_w = getConf()
+  db_w = get_conf()
   add_book = db_w.getDB()
   if aname in add_book.keys():
     raise ValueError('Contact exists')
@@ -24,9 +24,8 @@ def add(aname, aphone):
   db_contents = db_w.getDB()
   print("DB contents: \n", db_contents.items())
 
-
 def remove(dname):
-  db_w = getConf()
+  db_w = get_conf()
   add_book = db_w.getDB()
   if dname not in add_book:
     raise ValueError('No contact')
@@ -34,10 +33,11 @@ def remove(dname):
   db_w.updateDB(add_book)
   print(value + ' deleted')
 
-def getConf():
+def get_conf():
   config = configparser.ConfigParser()
   config.read(r'config.cfg')
   db_type = config.get('DB_File', 'type')
+  db_w = None
   if db_type == 'pickle':
     #print('Pickle')
     db_w = __import__('wFiles_pickle')
