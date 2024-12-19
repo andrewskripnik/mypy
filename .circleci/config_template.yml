@@ -45,10 +45,10 @@ commands:
             echo "--> Check file content after modification"
             cat -A << parameters.file_list >>
 
-            if [ -e << parameters.file_list >> ]; then
+            if [ -n "<< parameters.file_list >>" ] && [ -e << parameters.file_list >> ]; then
               while IFS= read -r f; do
                 echo "--> File for pylint: $f"
-                if [ -e $f ]; then
+                if [ -n "$f" ] && [ -e << parameters.file_list >> ]; then
                   echo "--> Running pylint for $f"
                   pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" "$f" || true
                   echo "--> Completed pylint for $f"
