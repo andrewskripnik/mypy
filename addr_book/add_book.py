@@ -7,7 +7,7 @@ from crud import search, add, remove
 act = input('Choose action: \nsearch \nadd \ndelete \ngetDB \n')
 add_book = {}
 
-############### Main ###############
+############## Main ##############
 def main():
   if act.lower() in ['se', 'sea', 'sear', 'searc', 'search']:
     sname = input('Name for search please: ')
