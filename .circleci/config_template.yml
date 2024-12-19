@@ -39,6 +39,8 @@ commands:
             ls -la
             echo "Show file content"
             cat -A << parameters.file_list >>
+            echo "Modify file content"
+            sed -i 's/\r//' << parameters.file_list >>
             echo ""
             if [ -e << parameters.file_list >> ]; then
               while IFS= read -r f; do
