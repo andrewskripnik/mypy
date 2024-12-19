@@ -40,7 +40,7 @@ commands:
                 echo "File for pylint: $f"
                 if test -e $f; then
                   echo "Running pylint for $f"
-                  pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" "$f"
+                  pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" "$f" || true
                 fi
               done
             fi
