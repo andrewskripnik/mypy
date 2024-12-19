@@ -41,6 +41,7 @@ commands:
             cat -A << parameters.file_list >>
             echo "--> Dos2unix file content"
             sed -i 's/\r//' << parameters.file_list >>
+            echo "" >> << parameters.file_list >>
             echo "--> Check file content after modification"
             cat -A << parameters.file_list >>
 
