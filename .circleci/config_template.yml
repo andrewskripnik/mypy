@@ -35,14 +35,14 @@ commands:
             cd << parameters.folder >>
             if test -e << parameters.file_list >>; then
               echo "Show file content"
-              file_lst=`cat << parameters.file_list >>`
-              for f in $file_lst; do
+              file_lst=$(cat << parameters.file_list >>)
+              while IFS= read -r f; do
                 echo "File for pylint: $f"
                 if test -e $f; then
                   echo "Running pylint for $f"
                   pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" "$f" || true
                 fi
-              done
+              done < << parameters.file_list >>
             fi
             true
 
