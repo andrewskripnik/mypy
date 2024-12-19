@@ -19,7 +19,7 @@ def compare_json(json1, json2):
 def main(file1, file2):
   json1 = load_json(file1)
   json2 = load_json(file2)
-  
+
   differences = compare_json(json1, json2)
   if differences:
     print("The JSON files are different.")
