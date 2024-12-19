@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  my-commands: local!/.circleci/commands.yml
+  
 jobs:
   run_operations:
     docker:
