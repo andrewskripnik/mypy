@@ -9,7 +9,7 @@ commands:
         default: ""
     steps:
       - run:
-          name: --> << parameters.folder >> <-- Install python requirements
+          name: ----> << parameters.folder >> <---- Install python requirements
           command: |
             cd << parameters.folder >>
             if test -e requirements.txt; then
@@ -27,31 +27,30 @@ commands:
         default: "files_for_pylint.lst"
     steps:
       - run:
-          name: --> << parameters.folder >> <-- Install pylint
+          name: ----> << parameters.folder >> <---- Install pylint
           command: pip install pylint
       - run:
-          name: --> << parameters.folder >> <-- Run pylint
+          name: ----> << parameters.folder >> <---- Run pylint
           command: |
             cd << parameters.folder >>
-            echo "You are in folder"
+            echo "--> You are in folder"
             pwd
-            echo "Folder content"
+            echo "--> Folder content"
             ls -la
-            echo "Show file content"
+            echo "--> Show file content"
             cat -A << parameters.file_list >>
-            echo "Modify file content"
+            echo "--> Dos2unix file content"
             sed -i 's/\r//' << parameters.file_list >>
-            echo "Check file content after modification"
+            echo "--> Check file content after modification"
             cat -A << parameters.file_list >>
-            echo ""
 
             if [ -e << parameters.file_list >> ]; then
               while IFS= read -r f; do
-                echo "File for pylint: $f"
-                if [ -n $f ]; then
-                  echo "Running pylint for $f"
+                echo "--> File for pylint: $f"
+                if [ -e $f ]; then
+                  echo "--> Running pylint for $f"
                   pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" "$f" || true
-                  echo "Completed pylint for $f"
+                  echo "--> Completed pylint for $f"
                 fi
               done < << parameters.file_list >>
             fi
@@ -73,7 +72,7 @@ jobs:
           folder: << parameters.folder >>
           file_list: "files_for_pylint.lst"
       - run:
-          name: --> << parameters.folder >> <-- Run operations
+          name: ----> << parameters.folder >> <---- Run operations
           command: |
             echo "Running operations for << parameters.folder >>"
             cd << parameters.folder >>
