@@ -10,20 +10,18 @@ jobs:
         type: string
     steps:
       - checkout
-      - run: 
-          name: Install python requirements
-          command: |
-            ls
-            echo << parameters.folder >>
-            cd << parameters.folder >>
-            pwd
-            pip install -r requirements.txt
+      - install_python_requirements:
+          folder: << parameters.folder >>
+      - run_pylint:
+          folder: << parameters.folder >>
+          file_list: "files_for_pylint.lst"
       - run:
           name: Run operations for << parameters.folder >>
           command: |
             echo "Running operations for << parameters.folder >>"
             cd << parameters.folder >>
-            pylint --ignore-docstrings y --ignore-comments y --indent-string '  ' "--disable=C0116" add_book.py || true
+            ls
+
 workflows:
   setup_and_run_operations:
     jobs:
